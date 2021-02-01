@@ -1,0 +1,203 @@
+[8-4]
+# 주석달기
+important_data = [(datetime(2019, 6, 3), "Low Price"),(datetime(2020, 2, 19), "Peak Price")]
+for d, label in important_data:
+    ax.annotate(label, xy=(d, price.asof(d)+10), 
+                xytext=(d,price.asof(d)+100),
+                arrowprops=dict(facecolor='red'))
+
+
+[8-8]
+sns.catplot(x="day", y="tip", jitter=False, data=tips)
+범주형 데이터: 주로 막대 그래프를 사용하여 수치를 요약. 일반적으로 가로, 세로, 누적, 그룹화된 막대 그래프를 사용.
+matplotlib에 데이터를 인자로 넣기 위해선 pandas 데이터를 바로 이용할 수는 없습니다. 데이터를 x, y에 series, list 형태로 각각 나눠주어야 합니다.
+* grouped = df['tip'].groupby(df['sex']) --- 성별에 따른 팁
+** grouped.mean()
+** grouped.size()
+
+"""
+sex = dict(grouped.mean()) # 딕셔너리로 변경해서 사용 가능
+x = list(sex.keys()) 
+y = list(sex.values())
+
+plt.bar(x, y)
+plt.ylabel('tip[$]')
+plt.title('Tip by Sex')
+plt.legend()
+"""
+
+"""
+위 코드를 seaborn을 이용하면 더 쉽게 나타낼 수 있다.
+sns.barplot(data=df, x='sex', y='tip)
+"""
+
+"""
+Matplotlib와 함께 사용해 figsize, title을 정하는 등 그래프에 다양한 옵션을 넣을 수도 있다.
+plt.figure(figsize=(10,6))
+sns.barplot(data=df, x='sex', y='tip')
+plt.ylim(0, 4)
+plt.title('Tip by sex')
+"""
+
+
+
+
+[8-9]
+수치형 데이터를 나타내는 데 가장 좋은 그래프는 산점도 혹은 선 그래프.
+
+plt.scatter과 sns.scatter 차이?
+plt.plot(np.random.randn(50).cumsum())
+x = np.linspace(0, 10, 100) 
+
+<코드1>
+x = np.linspace(0, 10, 100) 
+plt.plot(x, np.sin(x), 'o')
+plt.plot(x, np.cos(x)) 
+plt.show()
+
+<코드2>
+sns.lineplot(x, np.sin(x))
+sns.lineplot(x, np.cos(x))
+
+patches = ax1.hist(x1, bins=50, density=False)
+patches = ax1.hist(x2, bins=50, density=False, alpha=0.5)
+
+*범주형 = 바이올린
+*수치형 = 산점도, 선
+
+[8-10]
+시계열 데이터: 관측치가 시간적 순서를 가진 데이터.
+sns.barplot(data=flights, x='year', y='passengers')
+sns.pointplot(data=flights, x='year', y='passengers')
+sns.lineplot(data=flights, x='year', y='passengers')
+sns.lineplot(data=flights, x='year', y='passengers', hue='month', palette='ch:.50')
+plt.legend(bbox_to_anchor=(1.03, 1), loc=2) #legend 그래프 밖에 추가하기
+sns.distplot(flights['passengers'])
+
+
+
+[8-11]
+sns.heatmap(pivot, linewidths=.2, annot=True, fmt="d")
+
+sns.heatmap(pivot, cmap="YlGnBu")
+
+
+**그래프 그리는 법 **
+1. figure 객체 생성
+fig = plt.figure() # figure 객체 생성 (도화지를 사옴)
+ - 옵션: fig = plt.figure(figsize=(5,2))
+
+2. 서브플롯 생성
+ax1 = fig.add_subplot(1,1,1) # 전체 그래프 틀에 관한 정의 (도화지를 몇개로 나눌 것인지 정의)
+
+★여기서 1,2를 통합해 실행할 수 있는 명령어: plt.plot()
+"""
+import numpy as np
+x = np.linspace(0, 10, 100) 
+plt.plot(x, np.sin(x),'o')
+plt.plot(x, np.cos(x),'--', color='black') 
+plt.show()
+"""
+
+★서브플롯도 추가 가능
+"""
+x = np.linspace(0, 10, 100) 
+
+plt.subplot(2,1,1)
+plt.plot(x, np.sin(x),'red','o')
+
+plt.subplot(2,1,2)
+plt.plot(x, np.cos(x), 'orange') 
+plt.show()
+"""
+
+3. 그래프 그리기
+ax1.bar(x축 자료, y축 자료)
+
+4. 라벨, 타이틀 달기
+plt.xlabel('Subject')
+plt.ylabel('Points')
+plt.title("Yuna's Test Result")
+
+
+5. 축 경계
+plt.ylim([1600,2200])
+plt.xlim(['2019-05-01','2020-03-01'])
+
+---Pandas의 Series로 그래프 그리기---
+#그래프 데이터 
+csv_path = os.getenv("HOME") + "/aiffel/data_represent/data/AMZN.csv"
+data = pd.read_csv(csv_path ,index_col=0, parse_dates=True)
+price = data['Close']
+
+# 축 그리기 및 좌표축 설정
+fig = plt.figure()
+ax = fig.add_subplot(1,1,1)
+price.plot(ax=ax, style='black')
+plt.ylim([1600,2200])
+plt.xlim(['2019-05-01','2020-03-01'])
+
+# 주석달기
+important_data = [(datetime(2019, 6, 3), "Low Price"),(datetime(2020, 2, 19), "Peak Price")]
+for d, label in important_data:
+    ax.annotate(label, xy=(d, price.asof(d)+10), 
+                xytext=(d,price.asof(d)+100),
+                arrowprops=dict(facecolor='red'))
+
+# 그리드, 타이틀 달기
+plt.grid()
+ax.set_title('StockPrice')
+
+# 보여주기
+plt.show()
+
+<옵션>
+1) 그리드(grid) : plt.grid()
+
+<linestyle, marker 옵션>
+x = np.linspace(0, 10, 100) 
+
+plt.plot(x, x + 0, linestyle='solid') 
+plt.plot(x, x + 1, linestyle='dashed') 
+plt.plot(x, x + 2, linestyle='dashdot') 
+plt.plot(x, x + 3, linestyle='dotted')
+plt.plot(x, x + 0, '-g') # solid green 
+plt.plot(x, x + 1, '--c') # dashed cyan 
+plt.plot(x, x + 2, '-.k') # dashdot black 
+plt.plot(x, x + 3, ':r'); # dotted red
+plt.plot(x, x + 4, linestyle='-') # solid 
+plt.plot(x, x + 5, linestyle='--') # dashed 
+plt.plot(x, x + 6, linestyle='-.') # dashdot 
+plt.plot(x, x + 7, linestyle=':'); # dotted
+
+**Pandas로 그래프 그리기** plot() 메소드 이용, matplotlib가 연계해 사용하면 좋다.
+pandas.plot메서드 인자
+
+    label: 그래프의 범례이름.
+    ax: 그래프를 그릴 matplotlib의 서브플롯 객체.
+    style: matplotlib에 전달할 'ko--'같은 스타일의 문자열
+    alpha: 투명도 (0 ~1)
+    kind: 그래프의 종류: line, bar, barh, kde
+    logy: Y축에 대한 로그스케일
+    use_index: 객체의 색인을 눈금 이름으로 사용할지의 여부
+    rot: 눈금 이름을 로테이션(0 ~ 360)
+    xticks, yticks: x축, y축으로 사용할 값
+    xlim, ylim: x축, y축 한계
+    grid: 축의 그리드 표시할 지 여부
+
+pandas의 data가 DataFrame일때 plot 메서드 인자
+
+    subplots: 각 DataFrame의 칼럼을 독립된 서브플롯에 그린다.
+    sharex: subplots=True면 같은 X축을 공유하고 눈금과 한계를 연결한다.
+    sharey: subplots=True면 같은 Y축을 공유한다.
+    figsize: 그래프의 크기, 튜플로 지정
+    title: 그래프의 제목을 문자열로 지정
+    sort_columns: 칼럼을 알파벳 순서로 그린다.
+
+
+
+
+
+
+
+

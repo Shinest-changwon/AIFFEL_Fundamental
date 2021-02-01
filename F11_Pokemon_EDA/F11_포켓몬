@@ -1,0 +1,22 @@
+Fundamental 11
+모르는 내용 정리
+
+11-7
+- set_xlabel :x축 이름
+- sort_values: 정렬
+- countplot, order의 옵션:해당 리스트대로 정렬
+
+11-8
+- sns.scatterplot(data=pokemon, x="Type 1", y="Total", hue="Legendary")
+
+11-12
+- pd.concat
+- legendary["name_count"] = legendary["Name"].apply(lambda i: len(i))    
+
+11-14
+- pokemon = pokemon.replace(to_replace="Nidoran♀", value="Nidoran X")
+- 정규표현식: https://wikidocs.net/4308 (re 모듈)
+- list의 extend
+- Collection 패키지는 list 또는 set 자료형에서 각 요소의 개수를 다루고 싶을 때
+collection은 순서가 있는 딕셔너리인 OrderedDict, 요소의 개수를 카운트하는 Counter 등 여러 다양한 모듈을 제공
+
